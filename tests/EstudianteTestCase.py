@@ -1,16 +1,16 @@
 import unittest
 from datetime import datetime
-from src.seleccionestudiante.modelo.Asignatura import Asignatura
-from src.seleccionestudiante.modelo.Estudiante import Estudiante
-from src.seleccionestudiante.modelo.Equipo import Equipo
-from src.seleccionestudiante.modelo.Actividad import Actividad
-from src.seleccionestudiante.logica.Sorteo import Sorteo
-from src.seleccionestudiante.modelo.declarative_base import Session
+from src.modelo.Asignatura import Asignatura
+from src.modelo.Estudiante import Estudiante
+from src.modelo.Equipo import Equipo
+from src.modelo.Actividad import Actividad
+from src.logica.ControladorEstudiante import ControladorEstudiante
+from src.modelo.declarative_base import Session
 
 class AsignaturaTestCase ( unittest.TestCase ) :
     def setUp ( self ) :
         # Crea una sorteo para hacer las pruebas
-        self.sorteo = Sorteo ( )
+        self.controladorEstudiante = ControladorEstudiante ( )
 
         # Abre la sesión
         self.session = Session ( )
@@ -39,8 +39,8 @@ class AsignaturaTestCase ( unittest.TestCase ) :
         self.session.commit ( )
 
         # crear equipo de trabajo
-        self.equipo1 = Equipo ( denominacionEquipo = "Equipo01" )
-        self.equipo2 = Equipo ( denominacionEquipo = "Equipo02" )
+        self.equipo1 = Equipo ( denominacionEquipo = "Equipo1" )
+        self.equipo2 = Equipo ( denominacionEquipo = "Equipo2" )
         self.session.add ( self.equipo1 )
         self.session.add ( self.equipo2 )
         self.session.commit ( )
@@ -100,7 +100,11 @@ class AsignaturaTestCase ( unittest.TestCase ) :
         self.session.close ( )
 
     def test_agregar_estudiante ( self ) :
-        resultado = self.sorteo.agregar_estudiante ( apellidoPaterno = "Mauricio" , apellidoMaterno = "Rivera" , nombres = "Richard" ,
+        resultado = self.controladorEstudiante.agregar_estudiante ( apellidoPaterno = "Mauricio" , apellidoMaterno = "Rivera" , nombres = "Richard" ,
                                    elegible = True )
         self.assertEqual ( resultado , True )
 
+    def test_agregar_estudiante_repetido(self):
+        resultado = self.controladorEstudiante.agregar_estudiante ( apellidoPaterno = "Yauricasa" , apellidoMaterno = "Seguil" , nombres = "Beatriz" ,
+                              elegible = True)
+        self.assertNotEqual(resultado, True)
